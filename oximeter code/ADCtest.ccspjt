@@ -1,0 +1,100 @@
+[PROJECT]
+Target=ADCtest.hex
+Processor_Text=PIC18F2455
+CCSVersion=5.110P
+Compiler=PCH
+[Target Data]
+FileList=ADCtest.c
+[ADCtest.c]
+Type=4
+[mru-list]
+1=ADCtest.c
+
+[defines]
+buildcount=35
+
+[Opened Files]
+1=ADCtest.c
+t1=470
+2=..\..\..\..\Users\BME4390.EN-BM-LPS127-04\Downloads\Oximeter.c
+t2=15
+3=..\..\..\..\Program Files (x86)\PICC\Drivers\usb.c
+t3=211
+4=..\..\matlab hid\MATLAB_HID_TEST\MATLAB_HID_TEST\HIDTest.c
+t4=1
+Count=1
+
+[ProjectLog]
+Days=4
+D1=19-10-2023
+D1_L=10
+D1_L1=[54009]Stopped Editing.
+D1_L2=[54019]Started Editing.
+D1_L3=[54319]Stopped Editing.
+D1_L4=[54517]Started Editing.
+D1_L5=[55434]Stopped Editing.
+D1_L6=[56384]Started Editing.
+D1_L7=[57106]Stopped Editing.
+D1_L8=[57233]Started Editing.
+D1_L9=[57586]Stopped Editing.
+TotalEdit=93
+TotalDebug=0
+D1_E=46
+D1_D=0
+D1_L10=[57586]Project Closed.
+D2=26-10-2023
+D2_L=18
+D2_L1=[50532]Project Opened.
+D2_L2=[50557]Started Editing.
+D2_L3=[50865]Stopped Editing.
+D2_E=30
+D2_D=0
+D2_L4=[51220]Project Closed.
+D2_L5=[52920]Project Opened.
+D2_L6=[52930]Started Editing.
+D2_L7=[52975]Stopped Editing.
+D2_L8=[52975]Project Closed.
+D2_L9=[57446]Project Opened.
+D2_L10=[57538]Project Closed.
+D2_L11=[57555]Project Opened.
+D2_L12=[57627]Project Closed.
+D2_L13=[57648]Project Opened.
+D2_L14=[57653]Started Editing.
+D2_L15=[59024]Stopped Editing.
+D2_L16=[59031]Started Editing.
+D2_L17=[59633]Stopped Editing.
+D2_L18=[59633]Project Closed.
+D3=02-11-2023
+D3_L=14
+D3_L1=[51625]Project Opened.
+D3_L2=[51647]Started Editing.
+D3_L3=[51956]Stopped Editing.
+D3_L4=[53566]Started Editing.
+D3_L5=[53883]Stopped Editing.
+D3_L6=[56763]Started Editing.
+D3_L7=[57360]Stopped Editing.
+D3_L8=[57546]Started Editing.
+D3_L9=[57846]Stopped Editing.
+D3_L10=[57956]Started Editing.
+D3_L11=[58292]Stopped Editing.
+D3_E=6
+D3_D=0
+D3_L12=[60415]Project Closed.
+D3_L13=[60441]Project Opened.
+D3_L14=[61603]Project Closed.
+D4=09-11-2023
+D4_L=6
+D4_L1=[51087]Project Opened.
+D4_L2=[51091]Started Editing.
+D4_L3=[52041]Stopped Editing.
+D4_E=11
+D4_D=0
+D4_L4=[52457]Project Closed.
+D4_L5=[54518]Project Opened.
+D4_L6=[59276]Project Closed.
+
+[fileformats]
+forcecoff=0
+[Units]
+Count=1
+1=ADCtest (main)

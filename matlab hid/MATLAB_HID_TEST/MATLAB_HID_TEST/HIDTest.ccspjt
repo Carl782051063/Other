@@ -1,0 +1,53 @@
+[PROJECT]
+Target=HIDTest.hex
+Processor_Text=PIC18F2455
+CCSVersion=5.110P
+Compiler=PCH
+[Target Data]
+FileList=HIDTest.c
+[HIDTest.c]
+Type=4
+[mru-list]
+1=HIDTest.c
+
+[defines]
+buildcount=15
+
+[Opened Files]
+1=HIDTest.c
+t1=29
+Count=1
+
+[ProjectLog]
+Days=1
+D1=26-10-2023
+D1_L=19
+D1_L1=[52881]Started Editing.
+D1_L2=[52908]Stopped Editing.
+TotalEdit=12
+TotalDebug=0
+D1_E=12
+D1_D=0
+D1_L3=[52908]Project Closed.
+D1_L4=[52989]Project Opened.
+D1_L5=[53809]Started Editing.
+D1_L6=[54343]Stopped Editing.
+D1_L7=[54343]Project Closed.
+D1_L8=[54498]Project Opened.
+D1_L9=[54520]Project Closed.
+D1_L10=[54556]Project Opened.
+D1_L11=[54575]Started Editing.
+D1_L12=[54616]Stopped Editing.
+D1_L13=[54616]Project Closed.
+D1_L14=[55014]Project Opened.
+D1_L15=[56577]Started Editing.
+D1_L16=[56886]Stopped Editing.
+D1_L17=[57011]Project Closed.
+D1_L18=[57157]Project Opened.
+D1_L19=[57412]Project Closed.
+
+[fileformats]
+forcecoff=0
+[Units]
+Count=1
+1=HIDTest (main)

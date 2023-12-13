@@ -1,0 +1,88 @@
+///////////////////////////////////////////////////////////////////////
+// HIDtest.c
+////////////////////////////////////////////////////////////////////////
+
+#include <18F2455.h>
+#fuses HSPLL,NOWDT, NOLVP, NODEBUG,USBDIV,PLL5,CPUDIV1,VREGEN, MCLR
+#use delay(clock=48000000)
+
+
+// In usb.c/h - tells the CCS PIC USB firmware to include HID handling code.
+#DEFINE USB_HID_DEVICE  TRUE
+#define USB_EP1_TX_ENABLE  USB_ENABLE_INTERRUPT   //turn on EP1 for IN bulk/interrupt transfers
+#define USB_EP1_TX_SIZE    64  //allocate 64 bytes in the hardware for transmission   
+
+#define USB_EP1_RX_ENABLE  USB_ENABLE_INTERRUPT   //turn on EP1 for OUT bulk/interrupt transfers
+#define USB_EP1_RX_SIZE    64    // allocate 64 bytes in the hardware for reception   
+
+#include <pic18_usb.h>            // Microchip 18Fxx5x hardware layer for usb.c
+#include "PIC18F2455_desc64.h"    // HID descriptor file
+#include <usb.c>                  // handles usb setup tokens and get descriptor reports
+
+#define  LED         PIN_A0   
+
+// command defines
+#define  CMD_RESTART           0
+#define  CMD_FLASH_LED         1
+#define  CMD_RETURN_TEST_DATA  2
+
+// misc default values
+#define  DEFAULT_DELAY_VAL  20
+
+// macro defines 
+#define ZERO_ARRAY(array)     memset(array, 0, sizeof(array))
+
+// function prototypes
+void  ExecuteCmd(void); 
+
+// Global Variables
+int8 cmd[64];      // buffer for command string received from the PC (via usb)
+
+void main()
+{
+ delay_ms(10);        // sometimes a delay here is helpful if just powering up 
+    output_high(LED);
+            delay_ms(1000);
+            output_low(LED);                    // to let the clock stablize   
+  usb_init();      // initialize usb communications
+  output_high(LED);
+           delay_ms(1000);
+            output_low(LED);
+ while(TRUE)   {
+           
+      if (usb_enumerated()) {         
+       if (usb_kbhit(1)) {   // Check for USB commands
+           usb_gets(1, cmd, 64, 100);
+           ExecuteCmd();
+       }
+    }
+  }
+}
+
+//   Executes a command based on the 1st byte in the HID string 
+//   byte 0 = cmd
+//   byte 1 = the command 
+//   byte 2, 3 etc = may be extra 
+void ExecuteCmd(void) 
+{
+  switch (cmd[0]) {
+       case CMD_FLASH_LED:   
+            usb_puts(1, cmd, 64, 100);    // echo string
+            output_high(LED);
+            delay_ms(500);
+            output_low(LED);
+            break;
+     
+       
+       case CMD_RETURN_TEST_DATA:
+            for(int8 i = 0; i < 64; i++) {
+               cmd[i] = i; 
+            }
+            usb_puts(1, cmd, 64, 100);    // return string
+            break;
+       
+       default:
+          return;
+    }
+}
+

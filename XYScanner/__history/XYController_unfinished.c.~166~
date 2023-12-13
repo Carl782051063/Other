@@ -1,0 +1,229 @@
+///////////////////////////////////////////////////////////////////////
+//  XYController.c
+//  Firmware for controlling the XY scanner stages used in BME4390
+////////////////////////////////////////////////////////////////////////
+
+#include <18F2455.h>
+#device ADC=8           // use onboard ADC with 8-bit resolution. Must come before fuses
+#fuses HSPLL,NOWDT, NOLVP, NODEBUG,USBDIV,PLL5,CPUDIV1,VREGEN, MCLR
+#use delay(clock=48000000)
+
+// In usb.c/h - tells the CCS PIC USB firmware to include HID handling code.
+#DEFINE USB_HID_DEVICE  TRUE
+#define USB_EP1_TX_ENABLE  USB_ENABLE_INTERRUPT   //turn on EP1 for IN bulk/interrupt transfers
+#define USB_EP1_TX_SIZE    64  //allocate 64 bytes in the hardware for transmission   
+
+#define USB_EP1_RX_ENABLE  USB_ENABLE_INTERRUPT   //turn on EP1 for OUT bulk/interrupt transfers
+#define USB_EP1_RX_SIZE    64    // allocate 64 bytes in the hardware for reception   
+
+#include <pic18_usb.h>            // Microchip 18Fxx5x hardware layer for usb.c
+#include "PIC18F2455_desc64.h"    // HID descriptor file
+#include <usb.c>                  // handles usb setup tokens and get descriptor reports
+
+// pin defines
+#define QTR_SENSOR    PIN_A0
+#define LED           PIN_A1
+#define XEND          PIN_A2
+#define XSTART        PIN_A3
+#define YEND          PIN_A4
+#define YSTART        PIN_A5
+#define XMOTOR_ENABLE PIN_B0
+#define XMOTOR_DIR    PIN_B1
+#define XMOTOR_STEP   PIN_B2
+#define YMOTOR_ENABLE PIN_B3
+#define YMOTOR_DIR    PIN_B4
+#define YMOTOR_STEP   PIN_B5
+
+// command defines
+#define  CMD_FLASH_LED         1
+#define  CMD_READ_SENSORS      2
+#define  CMD_STEP_X            3
+#define  CMD_STEP_Y            4
+#define  CMD_ENABLE_X          5
+#define  CMD_ENABLE_Y          6
+
+// misc default values
+#define  STEPPER_PULSEWIDTH    500
+#define  STEPPER_WAIT          500
+#define  STEP_FORWARD          0
+#define  STEP_BACKWARDS        1
+
+// macro defines
+#define FLASH_LED    output_high(LED);  delay_ms(50); output_low(LED);
+int8 direction_X;
+int8 direction_Y;
+int8 numsteps;
+// Function prototypes here:
+void  ExecuteCmd(void); 
+int8  ReadADC(void) ;
+void  StepX(void);
+void  StepY(void);
+
+// Global Variables:
+int8 command[64];      // buffer for command string received from the PC (via usb)
+
+void main()
+{
+ delay_ms(10);        // sometimes a delay here is helpful if just powering up 
+                      // to let the clock stablize   
+  usb_init();         // initialize usb communications
+ 
+ output_high(XMOTOR_ENABLE);
+ output_high(YMOTOR_ENABLE);
+  // preset all the control pins:
+  //....
+    
+  while(TRUE)   {
+      if (usb_enumerated()) {         
+       if (usb_kbhit(1)) {   // Check for USB commands
+           usb_gets(1, command, 64, 100);
+           ExecuteCmd();
+       }  // kbhit if end
+    }   // usb_enumerated if end
+  }  // while loop end
+}
+
+//   Executes a command based on the 1st byte in the HID string 
+//   byte 0 = cmd
+//   byte 1-63 = data bytes  
+void ExecuteCmd(void) 
+{
+  switch (command[0]) {
+        case CMD_FLASH_LED:   
+            usb_puts(1, command, 64, 100);    // echo string
+            FLASH_LED;
+            break;
+     
+       case CMD_READ_SENSORS:
+            // fill in code here
+            command[1]=ReadADC();
+            command[2]=input(XSTART);
+            command[3]=input(XEND);
+            command[4]=input(YSTART);
+            command[5]=input(YEND);
+            usb_puts(1, command, 64, 100);    // echo string
+            break;
+                
+       case CMD_STEP_X:
+            // I recommend loading the sensor data here first
+            // and returning it 
+            
+          direction_X=command[1];
+          numsteps =command[2]; 
+            command[1]=ReadADC();
+            command[2]=input(XSTART);
+            command[3]=input(XEND);
+            command[4]=input(YSTART);
+            command[5]=input(YEND);
+            usb_puts(1, command, 64, 100);    // echo string
+            StepX();
+            // then call your Xstep function
+            break;
+       
+        case CMD_STEP_Y:
+            // same as above
+           direction_Y=command[1];
+           numsteps =command[2];  
+            command[1]=ReadADC();
+            command[2]=input(XSTART);
+            command[3]=input(XEND);
+            command[4]=input(YSTART);
+            command[5]=input(YEND);
+            usb_puts(1, command, 64, 100);    // echo string
+                        StepY();
+            // then call your Ystep function
+            break;
+
+        case CMD_ENABLE_X:
+        
+        
+             if(command[1]==1){
+             output_low(XMOTOR_ENABLE);
+             }
+             else{
+             output_high(XMOTOR_ENABLE);
+             }
+            
+            command[1]=ReadADC();
+            command[2]=input(XSTART);
+            command[3]=input(XEND);
+            command[4]=input(YSTART);
+            command[5]=input(YEND);
+            
+            usb_puts(1, command, 64, 100);    // echo string
+            break;
+      
+       case CMD_ENABLE_Y:
+           // fill in code..
+             if(command[1]==1){
+             output_low(YMOTOR_ENABLE);
+             }
+             else{
+             output_high(YMOTOR_ENABLE);
+             }
+             
+             
+            command[1]=ReadADC();
+            command[2]=input(XSTART);
+            command[3]=input(XEND);
+            command[4]=input(YSTART);
+            command[5]=input(YEND);
+            
+            usb_puts(1, command, 64, 100);    // echo string
+            break;
+
+       default:
+          return;
+    }
+}
+
+// you need to set the direction and the number of steps
+// You should have saved these values previously before you 
+// sent the sensor data back.
+void StepX(void)
+{
+   //  output_low(XMOTOR_ENABLE);
+   
+   
+    if(direction_X){
+    output_low(XMOTOR_DIR);
+   }
+   else if(direction_X==0){
+    output_high(XMOTOR_DIR);   
+   }
+   
+   for(int i=0;i<numsteps;i++){
+   output_low(XMOTOR_STEP);
+   }
+}
+
+void StepY(void)
+{
+    output_low(YMOTOR_ENABLE);
+    if(direction_Y){
+    output_high(YMOTOR_DIR);
+   }
+   else if(direction_Y==0){
+    output_low(YMOTOR_DIR);
+   }
+   
+   for(int i=0;i<numsteps;i++){
+   output_high(YMOTOR_STEP);
+  
+   }
+}
+
+// The ADC reads relatively quickly - you can read it a few 
+// (2 or 4) times and return the average.   
+// Doing this as a power of 2 has the advantage of fast averaging
+// since the bit shift is a division. e.g 4>>1 = 2
+// You also might want to out a short delay (~50 us) between ADC reads
+int8 ReadADC(void)
+{
+ int16 val = 0;
+ for (int8 i=0; i<4; i++) { 
+ val += read_adc();
+ }
+ return (val>>2); // fast divide by 4 
+} 
+

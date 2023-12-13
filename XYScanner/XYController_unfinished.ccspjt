@@ -1,0 +1,76 @@
+[PROJECT]
+Target=XYController_unfinished.hex
+Processor_Text=PIC18F2455
+CCSVersion=5.110P
+Compiler=PCH
+[Target Data]
+FileList=XYController_unfinished.c
+[XYController_unfinished.c]
+Type=4
+[mru-list]
+1=XYController_unfinished.c
+
+[defines]
+buildcount=22
+
+[ProjectLog]
+Days=2
+D1=16-11-2023
+D1_L=10
+D1_L1=[55494]Stopped Editing.
+D1_L2=[55569]Started Editing.
+D1_L3=[56342]Stopped Editing.
+D1_L4=[56366]Started Editing.
+D1_L5=[59052]Stopped Editing.
+D1_L6=[59277]Started Editing.
+D1_L7=[59701]Stopped Editing.
+D1_L8=[60163]Started Editing.
+D1_L9=[60406]Stopped Editing.
+TotalEdit=103
+TotalDebug=0
+D1_E=62
+D1_D=0
+D1_L10=[60406]Project Closed.
+D2=30-11-2023
+D2_L=26
+D2_L1=[49270]Project Opened.
+D2_L2=[49343]Started Editing.
+D2_L3=[49665]Stopped Editing.
+D2_L4=[50210]Started Editing.
+D2_L5=[50511]Stopped Editing.
+D2_L6=[50620]Started Editing.
+D2_L7=[50997]Stopped Editing.
+D2_L8=[51081]Started Editing.
+D2_L9=[52352]Stopped Editing.
+D2_L10=[52544]Started Editing.
+D2_L11=[53775]Stopped Editing.
+D2_L12=[53805]Started Editing.
+D2_L13=[54340]Stopped Editing.
+D2_L14=[54858]Started Editing.
+D2_L15=[55196]Stopped Editing.
+D2_L16=[55601]Started Editing.
+D2_L17=[55922]Stopped Editing.
+D2_L18=[55973]Started Editing.
+D2_L19=[56313]Stopped Editing.
+D2_E=41
+D2_D=0
+D2_L20=[56934]Project Closed.
+D2_L21=[57675]Project Opened.
+D2_L22=[58054]Started Editing.
+D2_L23=[58387]Stopped Editing.
+D2_L24=[60018]Started Editing.
+D2_L25=[60369]Stopped Editing.
+D2_L26=[61733]Project Closed.
+
+[Opened Files]
+1=XYController_unfinished.c
+t1=57
+2=..\..\..\..\..\Program Files (x86)\PICC\Drivers\pic18_usb.c
+t2=718
+Count=1
+
+[fileformats]
+forcecoff=0
+[Units]
+Count=1
+1=XYController_unfinished (main)

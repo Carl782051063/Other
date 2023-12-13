@@ -1,0 +1,11 @@
+Compiling C:\BME4390\group 6, Ang, Tu\matlab hid\MATLAB_HID_TEST\MATLAB_HID_TEST\HIDTest on 26-Oct-23 at 15:43
+>>> Warning 203 "C:\Program Files (x86)\PICC\Drivers\pic18_usb.c" Line 728(1,1): Condition always TRUE
+>>> Warning 216 "C:\BME4390\group 6, Ang, Tu\matlab hid\MATLAB_HID_TEST\MATLAB_HID_TEST\HIDTest.c" Line 84(1,2): Interrupts disabled during call to prevent re-entrancy:  (usb_token_reset)
+>>> Warning 216 "C:\BME4390\group 6, Ang, Tu\matlab hid\MATLAB_HID_TEST\MATLAB_HID_TEST\HIDTest.c" Line 84(1,2): Interrupts disabled during call to prevent re-entrancy:  (@MUL1616)
+>>> Warning 216 "C:\BME4390\group 6, Ang, Tu\matlab hid\MATLAB_HID_TEST\MATLAB_HID_TEST\HIDTest.c" Line 84(1,2): Interrupts disabled during call to prevent re-entrancy:  (usb_flush_out)
+>>> Warning 216 "C:\BME4390\group 6, Ang, Tu\matlab hid\MATLAB_HID_TEST\MATLAB_HID_TEST\HIDTest.c" Line 84(1,2): Interrupts disabled during call to prevent re-entrancy:  (usb_tbe)
+>>> Warning 216 "C:\BME4390\group 6, Ang, Tu\matlab hid\MATLAB_HID_TEST\MATLAB_HID_TEST\HIDTest.c" Line 84(1,2): Interrupts disabled during call to prevent re-entrancy:  (usb_flush_in)
+>>> Warning 202 "C:\BME4390\group 6, Ang, Tu\matlab hid\MATLAB_HID_TEST\MATLAB_HID_TEST\PIC18F2455_desc64.h" Line 207(6,28): Variable never used:   USB_STRING_DESC_OFFSET
+      Memory usage:   ROM=21%      RAM=19% - 21%
+      0 Errors,  7 Warnings.
+Build Successful.

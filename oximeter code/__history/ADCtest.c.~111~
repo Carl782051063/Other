@@ -1,0 +1,131 @@
+#include <18F2455.h>
+#include <stdlib.h>
+#include <math.h>
+#fuses HSPLL,NOWDT,NOPROTECT,NOLVP,NODEBUG,USBDIV,PLL5,CPUDIV1,VREGEN, MCLR
+#use delay(clock=48000000)
+
+#define LCD_E         PIN_A1                                    ////
+#define LCD_RS        PIN_A2                                    ////
+#define LCD_DB4       PIN_B0                                    ////
+#define LCD_DB5       PIN_B1                                    ////
+#define LCD_DB6       PIN_B2                                    ////
+#define LCD_DB7       PIN_B3 
+#define LED          PIN_A0
+#include <Flex_lcd.c>
+
+// defines for MAX1303 ADC
+#define MAX1303_CS PIN_A3
+#define MAX1303_DIN PIN_A4
+#define MAX1303_SSTRB PIN_A5
+#define MAX1303_SCLK PIN_C0
+#define MAX1303_DOUT PIN_C1
+// ADC conversion factors
+#define V_CONVERT 0.000125 // ((2 * 4.096V)/65535)
+#define ADC_OFFSET 32768 // 65536/2
+// other defines
+#define LED PIN_A0
+#define MAX1303_CLKTIC output_high(MAX1303_SCLK); delay_us(10); output_low(MAX1303_SCLK);
+// VARIBLES
+int16 AC660[64]= {0};
+int16 AC660[64]= {0};
+int16 DC660 = 0;
+int16 DC940 = 0;
+int8 cmd[65];
+int8 SequenceCode =0;
+
+
+
+//void SetupMAX1303(void);
+///int16 ReadMAX1303(int8 channel);
+void BlinkLED(void)
+{
+   output_high(LED);
+   delay_ms(500);
+   output_low(LED);
+}
+
+void SetupMAX1303(void)
+{
+output_high (MAX1303_CS);
+output_low (MAX1303_SCLK);
+output_low (MAX1303_CS);
+int8 mode = 0b10101000;
+
+for(int8 i=0;i<8;i++){        //SET  Mode-Control Byte: 1 010 1000
+
+  if(bit_test(mode,7-i)) {
+    output_high(MAX1303_DIN);
+  }
+  else {
+    output_low(MAX1303_DIN);
+  }
+   delay_us(2);
+   MAX1303_CLKTIC;
+   delay_us(2);
+}
+output_high (MAX1303_CS);
+output_low(MAX1303_DIN);
+BlinkLED();
+}
+
+
+int16 ReadMAX1303(int8 channel){
+int16 ADCval=0;
+int16 channelcommand=0;
+channelcommand= 0b10000000 | (channel<<4);
+
+output_low(MAX1303_CS);
+
+for(int8 i=0;i<8;i++){        //SET  Conversion-Start Byte: 1 000 0000
+  if(bit_test(channelcommand,7-i)){
+    output_high(MAX1303_DIN);
+  }
+  else {
+    output_low(MAX1303_DIN);
+  }
+   delay_us(2);
+   MAX1303_CLKTIC;
+   delay_us(2);
+}
+
+while(input(MAX1303_SSTRB));
+
+for(int j=0;j<16;j++){
+  ADCval=  ADCval | input(MAX1303_DOUT);
+  ADCval = ADCval<<1;
+  
+  delay_us(2);
+  MAX1303_CLKTIC;
+    delay_us(2);
+}
+  output_high (MAX1303_CS); 
+  return ADCval;
+}
+
+
+
+
+void main(void)
+{
+   lcd_init(); // Always call this first. 
+   lcd_putc("\fBME4390 Oximeter"); 
+   SetupMAX1303(); // initialize 
+   
+float voltage[4] = { 0 };
+char szBuf[34] = { 0 };
+while (TRUE) {
+for(int8 i = 0; i < 4; i++) {
+   voltage[i] = (float) ReadMAX1303(i); // V_CONVERT * (float) (ReadMAX1303(i) - ADC_OFFSET);
+}
+   sprintf(szBuf,"\f%5.0fV %5.0fV", voltage[0], voltage[1]);
+for(int8 i = 0; i < strlen(szBuf); i++) {
+   lcd_putc(szBuf[i]);
+}
+   sprintf(szBuf,"\n%5.0fV %5.0fV", voltage[2], voltage[3]);
+for(int8 i = 0; i < strlen(szBuf); i++) {
+   lcd_putc(szBuf[i]);
+}
+   delay_ms(500);
+}
+}
+
